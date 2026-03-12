@@ -1,3 +1,5 @@
+#include "tictactoe.hpp"
+
 #include <algorithm>
 #include <iostream>
 #include <optional>
@@ -116,6 +118,61 @@ void displayBoard(const vector<char>& table) {
 return;
 }
 
+Board::Board() {
+  makeBoard();
+}
+void Board::makeBoard() {
+  for (int i = 0; i < 9; i++) {
+    board.push_back('\0');
+  }
+}
+void Board::displayBoard() const {
+  for (int i = 0; i < BOARD_SIZE; i++) {
+    for (int j = 0; j < BOARD_SIZE; j++) {
+      cout << (j > 0 ? "|" : "") << "  ";
+      if (board.at(i*3 + j) != '\0') {
+        cout << board.at(i*3 + j);
+      } else {
+        cout << (i *BOARD_SIZE +j +1);
+      }
+      cout << "  ";
+    }
+    cout << endl << (i < BOARD_SIZE-1 ? "-----+-----+-----" : "") << endl;
+  }
+  return;
+}
+
+bool Board::requestPlay(const int location, Player player) {
+  int openSpots = 0;
+  if (location <= 0 || location > board.size()) { return false; }
+  if (board.at(location-1) == '\0') {
+    // board.at(location-1) = player.name;
+    return makePlay(location, player);
+  }
+  return false;
+}
+
+bool Board::makePlay(const int location, Player player) {
+  board.at(location-1) = player.name;
+}
+
+bool Board::didWin() {
+
+}
+
+
+Game::Game() {
+  playerX = new Player('X');
+  playerY = new Player('Y');
+  currentPlayer = playerX;
+  cout << "Welcome to Tic-Tac-Toe!" << endl;
+};
+
+void Game::playGame() {
+  do {
+
+  } while (!board.didWin());
+}
 
 
 // cout << "  " << (table[i*BOARD_SIZE + j] != '\0' ? table.at(i*3 + j) : empty++) << "  ";

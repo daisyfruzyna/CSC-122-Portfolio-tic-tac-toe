@@ -10,22 +10,18 @@ using namespace std;
 
 int main() {
   // Your driver program goes here
+
+  Game game;
+  game.playGame();
   bool rematch = false;
   string inputStr;
   bool won = false;
   int move;
   int turn = 1;
-  char board[3][3] = {{'1','2','3'},{'4','5','6'},{'7','8','9'}};
-  //char moveTable[MATRIX_SIZE][MATRIX_SIZE] = {{'\0', '\0', '\0'}, {'\0', '\0', '\0'}, {'\0', '\0', '\0'}};
   vector<char> table;
   for (int i = 0; i < 9; i++) {
     table.push_back('\0');
   }
-
-
-  // table = {'O', 'O', 'X',
-  //   '\0', 'X', '\0',
-  //   '\0', '\0', '\0'};
 
 
   cout << "Welcome to Tic-Tac-Toe! \n\n";
