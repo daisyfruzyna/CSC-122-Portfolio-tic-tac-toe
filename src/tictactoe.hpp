@@ -4,49 +4,41 @@
 // Your functions go here
 using namespace std;
 
-class Player {
-
-  int wins;
-  public:
-  Player(char name);
-    ~Player();
+struct player {
   char name;
-
+  int wins;
 };
+
 class Board {
   vector<char> board;
   public:
-    Board();
-    ~Board();
-    void makeBoard();
-
-    void displayBoard() const;
-    bool requestPlay(int location, Player player);
-    bool makePlay(const int location, Player player);
-    bool didWin();
-    bool didTie();
-
+  Board();
+  void makeBoard();
+  void displayBoard() const; //prints the board
+  bool checkPlay(int location) const; //checks if the play is legal
+  void makePlay(const int location, char marker); //sets the vector at location to the marker
+  bool didWin() const;  // checks if someone has one
+  bool isBoardFull() const;  // checks if there are no empty spaces left
 };
+
 class Game {
-  Player *playerX;
-  Player *playerY;
-  Player *currentPlayer;
-  Player *winner;
+  player play1;
+  player play2;
+  player *curPlay;
   Board board;
+
   void changePlayer();
-
-
 
   //game state info
 public:
   Game();
   ~Game();
   void playGame();
+  int validation(const string &prompt, const string &errorMessage) const;
+  void gameEnd(bool didWin) const;
+  static bool continuePlaying();
 
 };
 
-void displayBoard(const vector<char>& table);
-int requestPlay(const int move, const int turn, vector<char>* table);
-bool didWin(const vector<char> table);
-int validation(const int turn, const string &prompt, const string &errormessage, const vector<char> table);
-bool validation(const string &prompt, const string &errormessage);
+//int validation(const int turn, const string &prompt, const string &errormessage, const vector<char> table);
+//bool validation(const string &prompt, const string &errormessage);
