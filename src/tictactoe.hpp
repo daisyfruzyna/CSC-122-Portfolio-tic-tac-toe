@@ -14,7 +14,6 @@ class Board {
   public:
   Board();
   void makeBoard();
-  void clearBoard();
   void displayBoard() const; //prints the board
   bool checkPlay(int location) const; //checks if the play is legal
   void makePlay(const int location, char marker); //sets the vector at location to the marker
