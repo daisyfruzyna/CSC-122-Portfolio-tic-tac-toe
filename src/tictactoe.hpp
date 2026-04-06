@@ -14,6 +14,7 @@ class Board {
   public:
   Board();
   void makeBoard();
+  void clearBoard();
   void displayBoard() const; //prints the board
   bool checkPlay(int location) const; //checks if the play is legal
   void makePlay(const int location, char marker); //sets the vector at location to the marker
@@ -22,8 +23,8 @@ class Board {
 };
 
 class Game {
-  player play1;
-  player play2;
+  player play1{};
+  player play2{};
   player *curPlay;
   Board board;
 
@@ -37,6 +38,7 @@ public:
   int validation(const string &prompt, const string &errorMessage) const;
   void gameEnd(bool didWin) const;
   static bool continuePlaying();
+
 
 };
 

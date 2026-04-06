@@ -17,6 +17,7 @@ Board::Board() {
 }
 
 void Board::makeBoard() {
+  board.clear();
   for (int i = 0; i < 9; i++) {
     board.push_back('\0');
   }
@@ -142,7 +143,11 @@ void Game::playGame() {
       board.displayBoard();
       curPlay->wins++;
       gameEnd(board.didWin());
-      if (!continuePlaying()) break;
+      if (!continuePlaying()) {break;
+
+      }
+
+      board.makeBoard();
     }
 
     changePlayer();
