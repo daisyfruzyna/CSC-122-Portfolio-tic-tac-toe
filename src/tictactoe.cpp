@@ -74,19 +74,37 @@ bool Board::isBoardFull() const {
   return true;
 }
 
-Game::Game() {
-  play1 = {'X', 0};
-  play2 = {'O', 0};
+int Board::firstAvailable() {
+  for (int i = 0; i < board.size(); i++) {
+    if (board.at(i) == '\0') return i+1;
+  }
+  return -1;
+}
+
+Game::Game() : gameMode() {
+  gameMode = NA;
+  play1 = {'X', 0, true};
+  play2 = {'O', 0, true};
   curPlay = &play1;
   cout << "Welcome to Tic-Tac-Toe!" << endl;
   selectMode();
-};
+}
 Game::~Game() {
   cout << "have a nice day!" << endl;
-};
+}
 
 void Game::changePlayer() {
   curPlay = ((curPlay == &play1) ? &play2 : &play1);
+  // switch (gameMode) {
+  //   case HUMAN_VS_HUMAN:
+  //     curPlay = ((curPlay == &play1) ? &play2 : &play1);
+  //     break;
+  //   case HUMAN_VS_COMP:
+  //     break;
+  //   case COMP_VS_HUMAN:
+  //     break;
+  //   default: ;
+  // }
 }
 
 int Game::validation(const string &prompt, const string &errorMessage) const {
@@ -136,22 +154,31 @@ void Game::gameEnd(bool didWin) const {
   cout << play1.name << ": " << play1.wins << " - " << play2.name << ": " << play2.wins << endl;
 }
 void Game::playGame() {
+  int playerMove;
   switch (gameMode) {
-    case HUMAN_VS_HUMAN:
-      cout << "Human vs. Human" << endl;
-      break;
     case HUMAN_VS_COMP:
-      cout << "Human vs. Computer" << endl;
+      play1 = {'X', 0, true};
+      play2 = {'O', 0, false};
       break;
     case COMP_VS_HUMAN:
-      cout << "Computer vs. Human" << endl;
+      play1 = {'X', 0, false};
+      play2 = {'O', 0, true};
       break;
     default:
-      cout << "NA!" << endl;
+      play1 = {'X', 0, true};
+      play2 = {'O', 0, true};
   }
+
   do {
     board.displayBoard();
-    board.makePlay(validation("Whats your move: ", "That is not a valid move! Try again."), curPlay->name);
+    if (curPlay->isHuman) {
+      playerMove = validation("Whats your move: ", "That is not a valid move! Try again.");
+    } else {
+      playerMove = board.firstAvailable();
+    }
+
+    cout << playerMove << endl;
+    board.makePlay(playerMove, curPlay->name);
 
     if (board.didWin() || board.isBoardFull()) {
       board.displayBoard();
@@ -171,12 +198,10 @@ void Game::playGame() {
 }
 
 void Game::selectMode() {
-  gameMode = NA;
   cout << "What kind of game would you like to play?" << endl << endl;
   cout << "1. Human vs. Human" << endl;
   cout << "2. Human vs. Computer" << endl;
   cout << "3. Computer vs. Human" << endl << endl;
-  cout << "What is your selection? ";
   string inputStr;
   int inputInt = -1;
   string errorMessage = "That is not a valid entry!";
