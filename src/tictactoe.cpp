@@ -79,6 +79,7 @@ Game::Game() {
   play2 = {'O', 0};
   curPlay = &play1;
   cout << "Welcome to Tic-Tac-Toe!" << endl;
+  selectMode();
 };
 Game::~Game() {
   cout << "have a nice day!" << endl;
@@ -135,6 +136,19 @@ void Game::gameEnd(bool didWin) const {
   cout << play1.name << ": " << play1.wins << " - " << play2.name << ": " << play2.wins << endl;
 }
 void Game::playGame() {
+  switch (gameMode) {
+    case HUMAN_VS_HUMAN:
+      cout << "Human vs. Human" << endl;
+      break;
+    case HUMAN_VS_COMP:
+      cout << "Human vs. Computer" << endl;
+      break;
+    case COMP_VS_HUMAN:
+      cout << "Computer vs. Human" << endl;
+      break;
+    default:
+      cout << "NA!" << endl;
+  }
   do {
     board.displayBoard();
     board.makePlay(validation("Whats your move: ", "That is not a valid move! Try again."), curPlay->name);
@@ -155,3 +169,31 @@ void Game::playGame() {
   } while (true);
 
 }
+
+void Game::selectMode() {
+  gameMode = NA;
+  cout << "What kind of game would you like to play?" << endl << endl;
+  cout << "1. Human vs. Human" << endl;
+  cout << "2. Human vs. Computer" << endl;
+  cout << "3. Computer vs. Human" << endl << endl;
+  cout << "What is your selection? ";
+  string inputStr;
+  int inputInt = -1;
+  string errorMessage = "That is not a valid entry!";
+  do {
+    cout << "What is your selection? " << endl;
+    getline(cin, inputStr);
+
+    if (inputStr.empty()) {
+      cout << errorMessage << endl;
+      continue;
+    }
+    if (inputStr == "1") gameMode = HUMAN_VS_HUMAN;
+    if (inputStr == "2") gameMode = HUMAN_VS_COMP;
+    if (inputStr == "3") gameMode = COMP_VS_HUMAN;
+    if (gameMode != NA) return;
+    cout << errorMessage << endl;
+
+  } while (true);
+}
+

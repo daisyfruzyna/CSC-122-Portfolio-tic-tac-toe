@@ -22,6 +22,8 @@ class Board {
 };
 
 class Game {
+  enum gameMode{NA, HUMAN_VS_HUMAN, HUMAN_VS_COMP, COMP_VS_HUMAN};
+  enum gameMode gameMode;
   player play1{};
   player play2{};
   player *curPlay;
@@ -38,6 +40,9 @@ public:
   void gameEnd(bool didWin) const;
   static bool continuePlaying();
 
+
+  //p2 idea stuff
+  void selectMode();
 
 };
 
