@@ -87,7 +87,6 @@ Game::Game() : gameMode() {
   play2 = {'O', 0, true};
   curPlay = &play1;
   cout << "Welcome to Tic-Tac-Toe!" << endl;
-  selectMode();
 }
 Game::~Game() {
   cout << "have a nice day!" << endl;
@@ -95,16 +94,6 @@ Game::~Game() {
 
 void Game::changePlayer() {
   curPlay = ((curPlay == &play1) ? &play2 : &play1);
-  // switch (gameMode) {
-  //   case HUMAN_VS_HUMAN:
-  //     curPlay = ((curPlay == &play1) ? &play2 : &play1);
-  //     break;
-  //   case HUMAN_VS_COMP:
-  //     break;
-  //   case COMP_VS_HUMAN:
-  //     break;
-  //   default: ;
-  // }
 }
 
 int Game::validation(const string &prompt, const string &errorMessage) const {
@@ -154,6 +143,7 @@ void Game::gameEnd(bool didWin) const {
   cout << play1.name << ": " << play1.wins << " - " << play2.name << ": " << play2.wins << endl;
 }
 void Game::playGame() {
+  selectMode();
   int playerMove;
   switch (gameMode) {
     case HUMAN_VS_COMP:

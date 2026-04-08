@@ -141,3 +141,27 @@ TEST_CASE( "is the board full" ) {
     REQUIRE( board.isBoardFull() == true );
 }
 //validation cant be tested as it requires user inputs
+
+TEST_CASE("first available Move") {
+    Board board;
+    REQUIRE( board.firstAvailable() == 1 );
+    board.makePlay(1, 'X');
+    REQUIRE( board.firstAvailable() == 2 );
+    board.makePlay(2, 'X');
+    REQUIRE( board.firstAvailable() == 3 );
+    board.makePlay(3, 'X');
+    REQUIRE( board.firstAvailable() == 4 );
+    board.makePlay(4, 'X');
+    REQUIRE( board.firstAvailable() == 5 );
+    board.makePlay(5, 'X');
+    REQUIRE( board.firstAvailable() == 6 );
+    board.makePlay(6, 'X');
+    REQUIRE( board.firstAvailable() == 7 );
+    board.makePlay(7, 'X');
+    REQUIRE( board.firstAvailable() == 8 );
+    board.makePlay(8, 'X');
+    REQUIRE( board.firstAvailable() == 9 );
+    board.makePlay(9, 'X');
+    REQUIRE( board.firstAvailable() == -1 );
+}
+
