@@ -163,21 +163,24 @@ void Game::playGame() {
     case COMP_VS_HUMAN:
       play1 = {'X', 0, false};
       play2 = {'O', 0, true};
+      cout << "the computer will go first" << endl;
+      playerMove = board.firstAvailable();
+      board.makePlay(playerMove, curPlay->name);
+      changePlayer();
       break;
     default:
       play1 = {'X', 0, true};
       play2 = {'O', 0, true};
   }
-
+  board.displayBoard();
   do {
-    board.displayBoard();
     if (curPlay->isHuman) {
       playerMove = validation("Whats your move: ", "That is not a valid move! Try again.");
     } else {
       playerMove = board.firstAvailable();
     }
 
-    cout << playerMove << endl;
+    // cout << playerMove << endl;
     board.makePlay(playerMove, curPlay->name);
 
     if (board.didWin() || board.isBoardFull()) {
@@ -191,8 +194,10 @@ void Game::playGame() {
       board.makeBoard();
     }
 
+    if (!curPlay->isHuman || gameMode == HUMAN_VS_HUMAN) {
+      board.displayBoard();
+    }
     changePlayer();
-
   } while (true);
 
 }
