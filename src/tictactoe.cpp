@@ -165,6 +165,7 @@ void Game::playGame() {
   board.displayBoard();
   do {
     if (curPlay->isHuman) {
+      cout << "It is player " << curPlay->name << "'s turn" << endl;
       playerMove = validation("Whats your move: ", "That is not a valid move! Try again.");
     } else {
       playerMove = board.firstAvailable();
