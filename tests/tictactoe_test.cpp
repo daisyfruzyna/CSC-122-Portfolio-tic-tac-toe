@@ -164,4 +164,3 @@ TEST_CASE("first available Move") {
     board.makePlay(9, 'X');
     REQUIRE( board.firstAvailable() == -1 );
 }
-

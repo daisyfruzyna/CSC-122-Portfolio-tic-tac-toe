@@ -27,8 +27,8 @@ void Board::displayBoard() const {
   for (int i = 0; i < BOARD_SIZE; i++) {
     for (int j = 0; j < BOARD_SIZE; j++) {
       cout << (j > 0 ? "|" : "") << "  ";
-      if (board.at(i*3 + j) != '\0') {
-        cout << board.at(i*3 + j);
+      if (board.at(i*BOARD_SIZE + j) != '\0') {
+        cout << board.at(i*BOARD_SIZE + j);
       } else {
         cout << (i *BOARD_SIZE +j +1);
       }
@@ -76,7 +76,7 @@ bool Board::isBoardFull() const {
 
 int Board::firstAvailable() {
   for (int i = 0; i < board.size(); i++) {
-    if (board.at(i) == '\0') return i+1;
+    if (board.at(i) == '\0') return i;
   }
   return -1;
 }
@@ -116,6 +116,7 @@ int Game::validation(const string &prompt, const string &errorMessage) const {
     cout << errorMessage << endl;
   } while (true);
 }
+
 bool Game::continuePlaying() {
   string inputStr;
   string errormessage = "That is not a valid entry!";
@@ -142,10 +143,12 @@ void Game::gameEnd(bool didWin) const {
   else cout << "Looks like it was a tie" << endl << "The score remains: ";
   cout << play1.name << ": " << play1.wins << " - " << play2.name << ": " << play2.wins << endl;
 }
+
+
 void Game::playGame() {
-  selectMode();
   int playerMove;
-  switch (gameMode) {
+  selectMode();//gets mode player wants to use
+  switch (gameMode) {//sets relevant info
     case HUMAN_VS_COMP:
       play1 = {'X', 0, true};
       play2 = {'O', 0, false};
@@ -154,8 +157,8 @@ void Game::playGame() {
       play1 = {'X', 0, false};
       play2 = {'O', 0, true};
       cout << "the computer will go first" << endl;
-      playerMove = board.firstAvailable();
-      board.makePlay(playerMove, curPlay->name);
+      playerMove = board.firstAvailable() + 1;
+      board.makePlay(playerMove, curPlay->name);//comp makes move before display so player doesn't see both versions
       changePlayer();
       break;
     default:
@@ -168,21 +171,20 @@ void Game::playGame() {
       cout << "It is player " << curPlay->name << "'s turn" << endl;
       playerMove = validation("Whats your move: ", "That is not a valid move! Try again.");
     } else {
-      playerMove = board.firstAvailable();
+      playerMove = board.firstAvailable() + 1;
     }
 
     // cout << playerMove << endl;
     board.makePlay(playerMove, curPlay->name);
 
+    //checks for end state
     if (board.didWin() || board.isBoardFull()) {
       board.displayBoard();
       curPlay->wins++;
       gameEnd(board.didWin());
-      if (!continuePlaying()) {break;
+      if (!continuePlaying()) break;
 
-      }
-
-      board.makeBoard();
+      board.makeBoard();//resets board
     }
 
     if (!curPlay->isHuman || gameMode == HUMAN_VS_HUMAN) {
@@ -194,13 +196,13 @@ void Game::playGame() {
 }
 
 void Game::selectMode() {
+  string errorMessage = "That is not a valid entry!";
+  string inputStr;
+  int inputInt = -1;
   cout << "What kind of game would you like to play?" << endl << endl;
   cout << "1. Human vs. Human" << endl;
   cout << "2. Human vs. Computer" << endl;
   cout << "3. Computer vs. Human" << endl << endl;
-  string inputStr;
-  int inputInt = -1;
-  string errorMessage = "That is not a valid entry!";
   do {
     cout << "What is your selection? " << endl;
     getline(cin, inputStr);
