@@ -24,6 +24,7 @@ void Board::makeBoard() {
   for (int i = 0; i < 9; i++) {
     board.push_back('\0');
   }
+  trap_location = -1;
 }
 
 void Board::displayBoard() const {
@@ -58,9 +59,9 @@ int Board::getTrap() const{
   return trap_location;
 }
 
-bool Board::checkTrap(int location) {
+bool Board::checkTrap(int location) const{
   if (location == trap_location) {
-    trap_location = -1;
+    // trap_location = -1;
     return true;
   }
   return false;
@@ -85,7 +86,7 @@ bool Board::didWin() const {
 }
 bool Board::isBoardFull() const {
   for (int i = 0; i < 9; i++) {
-    if (board.at(i) == '\0') return false;
+    if (board.at(i) == '\0' && !checkTrap(i+1)) return false;
   }
   return true;
 }
@@ -211,14 +212,15 @@ void Game::playGame() {
     //checks for end state
     if (board.didWin() || board.isBoardFull()) {
       board.displayBoard();
-      curPlay->wins++;
+      if (board.didWin()) curPlay->wins++;
+
       gameEnd(board.didWin());
       if (!askYesOrNo("Would you like to play again (yes/no)? ")) break;
 
       board.makeBoard();//resets board
 
       //lets player set a new trap
-      if (askYesOrNo("Would you like to include a trap cell in your game? ")) {
+      if (askYesOrNo("Would you like to include a trap cell in your game (yes/no)? ")) {
         board.setTrap(rand() % 9 + 1);
         // board.setTrap(validation("Where would you like to place your trap?", "not a valid location"));
         cout << "Great! A trap has been hidden on the board." << endl;

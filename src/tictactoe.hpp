@@ -23,7 +23,7 @@ class Board {
   void makePlay(const int location, char marker); //sets the vector at location to the marker
   void setTrap(int location);
   int getTrap() const;
-  bool checkTrap(int location);
+  bool checkTrap(int location) const;
   bool didWin() const;  // checks if someone has one
   bool isBoardFull() const;  // checks if there are no empty spaces left
   int firstAvailable();

@@ -139,6 +139,18 @@ TEST_CASE( "is the board full" ) {
     REQUIRE( board.isBoardFull() == false );
     board.makePlay(9, 'X');
     REQUIRE( board.isBoardFull() == true );
+
+    //trap full test
+    board.makePlay(8, '\0');
+    REQUIRE( board.isBoardFull() == false );
+    board.makePlay(9, '\0');
+    REQUIRE( board.isBoardFull() == false );
+    board.setTrap(9);
+    REQUIRE( board.isBoardFull() == false );
+    board.makePlay(8, 'X');
+    REQUIRE( board.isBoardFull() == true );
+
+
 }
 //validation cant be tested as it requires user inputs
 
@@ -174,11 +186,14 @@ TEST_CASE("trap") {
     REQUIRE( board.checkTrap(0) == false);
     REQUIRE( board.getTrap() == 9 ); //trap is still inplace
     REQUIRE( board.checkTrap(9) == true );
-    REQUIRE( board.getTrap() == -1 ); //trap is removed after use
+    REQUIRE( board.getTrap() == 9 ); //trap is still there
+    // REQUIRE( board.getTrap() == -1 ); //trap is removed after use
 
     board.setTrap(0);
     REQUIRE( board.checkTrap(9) == false);
     REQUIRE( board.getTrap() == 0 ); //trap is still inplace
     REQUIRE( board.checkTrap(0) == true );
-    REQUIRE( board.getTrap() == -1 ); //trap is removed after use
+    REQUIRE( board.getTrap() == 0 ); //trap is still there
+    // REQUIRE( board.getTrap() == -1 ); //trap is removed after use
+    board.setTrap(-1);
 }
