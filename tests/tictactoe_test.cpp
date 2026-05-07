@@ -164,3 +164,21 @@ TEST_CASE("first available Move") {
     board.makePlay(9, 'X');
     REQUIRE( board.firstAvailable() == -1 );
 }
+
+//P3 tests
+
+TEST_CASE("trap") {
+    Board board;
+    REQUIRE( board.getTrap() == -1 ); //no trap
+    board.setTrap(9);
+    REQUIRE( board.checkTrap(0) == false);
+    REQUIRE( board.getTrap() == 9 ); //trap is still inplace
+    REQUIRE( board.checkTrap(9) == true );
+    REQUIRE( board.getTrap() == -1 ); //trap is removed after use
+
+    board.setTrap(0);
+    REQUIRE( board.checkTrap(9) == false);
+    REQUIRE( board.getTrap() == 0 ); //trap is still inplace
+    REQUIRE( board.checkTrap(0) == true );
+    REQUIRE( board.getTrap() == -1 ); //trap is removed after use
+}

@@ -7,17 +7,23 @@ using namespace std;
 struct player {
   char name;
   int wins;
-  int isHuman;
+  int is_human;
 };
 
 class Board {
   vector<char> board;
+  int trap_location;
+  bool trapActive;
+
   public:
   Board();
   void makeBoard();
   void displayBoard() const; //prints the board
   bool checkPlay(int location) const; //checks if the play is legal
   void makePlay(const int location, char marker); //sets the vector at location to the marker
+  void setTrap(int location);
+  int getTrap() const;
+  bool checkTrap(int location);
   bool didWin() const;  // checks if someone has one
   bool isBoardFull() const;  // checks if there are no empty spaces left
   int firstAvailable();
@@ -40,7 +46,7 @@ public:
   void playGame();
   int validation(const string &prompt, const string &errorMessage) const;
   void gameEnd(bool didWin) const;
-  static bool continuePlaying();
+  static bool askYesOrNo(const string &prompt);
 
 
   //p2 idea stuff

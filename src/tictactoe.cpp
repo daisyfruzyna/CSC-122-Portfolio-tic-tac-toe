@@ -6,6 +6,9 @@
 #include <string>
 #include <vector>
 
+#include <stdio.h>      /* printf, scanf, puts, NULL */
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 // Your code goes here
 
 using namespace std;
@@ -48,7 +51,20 @@ bool Board::checkPlay(const int location) const {
 void Board::makePlay(const int location, const char marker) {
   board.at(location-1) = marker;
 }
+void Board::setTrap(int location) {
+  trap_location = location;
+}
+int Board::getTrap() const{
+  return trap_location;
+}
 
+bool Board::checkTrap(int location) {
+  if (location == trap_location) {
+    trap_location = -1;
+    return true;
+  }
+  return false;
+}
 //v no need to check who is playing as most recent player to make a move WILL be the winner
 bool Board::didWin() const {
   //horizontal checks
@@ -76,12 +92,13 @@ bool Board::isBoardFull() const {
 
 int Board::firstAvailable() {
   for (int i = 0; i < board.size(); i++) {
-    if (board.at(i) == '\0') return i;
+    if (board.at(i) == '\0') return i+1;
   }
   return -1;
 }
 
 Game::Game() : gameMode() {
+  srand (time(NULL));
   gameMode = NA;
   play1 = {'X', 0, true};
   play2 = {'O', 0, true};
@@ -117,11 +134,13 @@ int Game::validation(const string &prompt, const string &errorMessage) const {
   } while (true);
 }
 
-bool Game::continuePlaying() {
+bool Game::askYesOrNo(const string &prompt) {
   string inputStr;
-  string errormessage = "That is not a valid entry!";
+  string errormessage = "That is not a valid reply!";
   do {
-    cout << "Would you like to play again (yes/no)? " << endl;
+    cout << prompt << endl;
+
+    // cout << "Would you like to play again (yes/no)? " << endl;
     getline(cin, inputStr);
 
     //int check
@@ -148,32 +167,44 @@ void Game::gameEnd(bool didWin) const {
 void Game::playGame() {
   int playerMove;
   selectMode();//gets mode player wants to use
+  if (askYesOrNo("Would you like to include a trap cell in your game? (yes/no)")) {
+    board.setTrap(rand() % 9 + 1);
+    // board.setTrap(validation("Where would you like to place your trap?", "not a valid location"));
+    cout << "Great! A trap has been hidden on the board." << endl;
+  }
   switch (gameMode) {//sets relevant info
     case HUMAN_VS_COMP:
       play1 = {'X', 0, true};
       play2 = {'O', 0, false};
+      board.displayBoard();
       break;
     case COMP_VS_HUMAN:
       play1 = {'X', 0, false};
       play2 = {'O', 0, true};
       cout << "the computer will go first" << endl;
-      playerMove = board.firstAvailable() + 1;
-      board.makePlay(playerMove, curPlay->name);//comp makes move before display so player doesn't see both versions
-      changePlayer();
+      // playerMove = board.firstAvailable();
+      // board.makePlay(playerMove, curPlay->name);//comp makes move before display so player doesn't see both versions
+      // changePlayer();2
       break;
     default:
       play1 = {'X', 0, true};
       play2 = {'O', 0, true};
+      board.displayBoard();
   }
-  board.displayBoard();
+
   do {
-    if (curPlay->isHuman) {
+    if (curPlay->is_human) {
       cout << "It is player " << curPlay->name << "'s turn" << endl;
       playerMove = validation("Whats your move: ", "That is not a valid move! Try again.");
     } else {
-      playerMove = board.firstAvailable() + 1;
+      playerMove = board.firstAvailable();
     }
-
+    if (board.checkTrap(playerMove)) {
+      cout << "Oh no! You set off the trap! " << curPlay->name << " loses their turn." << endl;
+      board.displayBoard();
+      changePlayer();
+      continue;
+    }
     // cout << playerMove << endl;
     board.makePlay(playerMove, curPlay->name);
 
@@ -182,18 +213,27 @@ void Game::playGame() {
       board.displayBoard();
       curPlay->wins++;
       gameEnd(board.didWin());
-      if (!continuePlaying()) break;
+      if (!askYesOrNo("Would you like to play again (yes/no)? ")) break;
 
       board.makeBoard();//resets board
+
+      //lets player set a new trap
+      if (askYesOrNo("Would you like to include a trap cell in your game? ")) {
+        board.setTrap(rand() % 9 + 1);
+        // board.setTrap(validation("Where would you like to place your trap?", "not a valid location"));
+        cout << "Great! A trap has been hidden on the board." << endl;
+      }
     }
 
-    if (!curPlay->isHuman || gameMode == HUMAN_VS_HUMAN) {
+    if (!curPlay->is_human || gameMode == HUMAN_VS_HUMAN) {
       board.displayBoard();
     }
     changePlayer();
   } while (true);
 
 }
+
+
 
 void Game::selectMode() {
   string errorMessage = "That is not a valid entry!";
